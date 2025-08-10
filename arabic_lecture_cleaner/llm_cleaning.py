@@ -55,9 +55,11 @@ def process_text_mammouth_api(
         "model": model,
         "messages": generate_messages(instruction_prompt, text_to_process),
     }
-    response = requests.post(const.MAMMOUTH_API_URL, headers=headers, json=data)
+    response = requests.post(const.MAMMOUTH_API_URL, headers=headers, json=data).json()
     logger.debug(response)
-    text_response = " - ".join([choice["message"]["content"] for choice in response["choices"]])
-    logger.info(f"Total used tokens: {response["usage"]["total_tokens"]}")
+    text_response = " - ".join(
+        [choice["message"]["content"] for choice in response["choices"]]
+    )
+    logger.info(f"Total used tokens: {response['usage']['total_tokens']}")
 
     return text_response

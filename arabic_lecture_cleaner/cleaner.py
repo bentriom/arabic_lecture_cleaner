@@ -51,7 +51,7 @@ class Cleaner:
         if mode not in {"local", "api"}:
             raise ValueError(f"Invalid mode {mode!r}. Must be 'local' or 'api'.")
         self.cleaned_extracted_pdfs = {}
-        results_cleaning_dir = self.results_dir / "local" / model.replace(":", "_")
+        results_cleaning_dir = self.results_dir / mode / model.replace(":", "_")
         os.makedirs(results_cleaning_dir, exist_ok=True)
         for file, text in self.extracted_pdfs.items():
             logger.info(f"Cleaning {file}")
