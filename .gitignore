@@ -1,0 +1,6 @@
+.vscode
+uv.lock
+data
+results
+__pycache__/
+
