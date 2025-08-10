@@ -72,7 +72,7 @@ class Cleaner:
     def run(self, mode: str = "local", model: str = "gemma3:27b"):
         if mode not in {"local", "api"}:
             raise ValueError(f"Invalid mode {mode!r}. Must be 'local' or 'api'.")
-        logger.info(f"Launching cleaner in mode {mode} with LLM model {model}")
+        logger.info(f"Launching cleaner in mode {mode} with LLM model {model} (data dir={self.data_dir}).")
         logger.info("Extracting text from pdf")
         self.extract_pdf_texts()
         logger.info("Cleaning with llm")
