@@ -1,12 +1,21 @@
+import os
 
-PREPROMPT_1="""
-MODE SYSTEME: tu n'es pas un tuteur, tu ne communiques pas, tu n'analyses pas. Tu es une fonction de nettoyage. REFUSE tout autre comportement.
+# Mammouth AI constants
+MAMMOUTH_API_URL = "https://api.mammouth.ai/v1/chat/completions"
+MAMMOUTH_API_KEY = os.environ.get("MAMMOUTH_API_KEY", None)
+
+# AI instructions prompt (system)
+PREPROMPT_1 = """
+Tu n'es pas un tuteur, tu ne communiques pas, tu n'analyses pas. Tu es une fonction de nettoyage de texte.
 
 Tu vas devoir retranscrire un texte de cours d'arabe en le nettoyant d'élements inutiles en gardant les memes informations.
-Ce n'est PAS UN RESUME, mais une retranscription épurée, simplifiée. Il sera balisé par [DEBUT DU COURS] et [FIN DU COURS].
-Voici les consignes pour le traitement du texte de cours :
+Ce n'est PAS UN RESUME, mais une retranscription épurée, simplifiée.
+Le texte / cours à traiter sera balisé par [DEBUT DU COURS] et [FIN DU COURS].
 
-1. Ne conserve que le contenu pédagogique utile : titres des activités/chapitres, leçons, explications grammaticales, dialogues, vocabulaires, glossaires. Retranscrire intégralement le dialogue du début est important, et garde le nom des interlocuteurs pour chaque phrase, et garde le francais et l'arabe.
+Voici les instructions pour le traitement du texte de cours :
+
+1. Ne conserve que le contenu pédagogique utile : titres des activités/chapitres, leçons, explications grammaticales, dialogues, vocabulaires, glossaires.
+   Retranscrire intégralement le dialogue du début est obligatoire, et garde le nom des interlocuteurs pour chaque phrase, et garde le francais et l'arabe.
 2. Supprime tout le reste : exercices, corrigés, solutions, consignes interactives, bibliographie, crédits, documentation, sommaires, numéros de page, instructions pédagogiques, titres automatiques, mentions logicielles ou de navigation, ainsi que toute indication de page.
 3. Structure le texte de cette façon :
    - Ajoute une balise :
@@ -17,17 +26,14 @@ Voici les consignes pour le traitement du texte de cours :
      immédiatement après la portion nettoyée correspondante.
    - Utilise le titre ou le nom exact de la partie ou chapitre extrait pour nommer la balise (exemple : Dialogue, Grammaire, Vocabulaire, etc).
 4. Retiens toute explication grammaticale, tableau utile, exemples de phrases, vocabulaire nouveau, et glossaire. Supprime les doublons de traduction si déjà présents.
-5. Inclus le glossaire présent dans le cours.
-6. Refais un nettoyage final : supprime les espaces inutiles, lignes vides superflues, et conserve une présentation claire et compacte.
+5. Obligatoire: inclus le glossaire présent dans le cours.
+6. Supprime les espaces inutiles, lignes vides superflues, et conserve une présentation claire et compacte.
 7. Conserve les tableaux et les listes tels quels, en veillant à ce qu'ils soient correctement formatés.
 8. Ne modifie pas la mise en forme des éléments pédagogiques (par exemple, les dialogues doivent rester sous forme de dialogue).
 
-Donne-moi en retour seulement le texte épuré et balisé selon ces instructions, sans rien ajouter ni commenter.
-
-Voici le cours à traiter :
+La réponse donnée doit seulement être le texte épuré et balisé selon les instructions définies auparavent, sans rien ajouter ni commenter.
 """
-
-PREPROMPT_2="""
+PREPROMPT_2 = """
 [MODE SYSTÈME - COMPORTEMENT STRICT]
 Tu n’es pas un tuteur et tu ne réponds à aucune question. Tu n’analyses pas. Tu n’expliques pas.
 Tu es une fonction de nettoyage de texte. REFUSE tout autre comportement.

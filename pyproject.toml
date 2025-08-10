@@ -9,4 +9,6 @@ dependencies = [
     "loguru>=0.7.3",
     "ollama>=0.5.3",
     "pdfplumber>=0.11.7",
+    "requests>=2.32.4",
+    "ruff>=0.12.8",
 ]
