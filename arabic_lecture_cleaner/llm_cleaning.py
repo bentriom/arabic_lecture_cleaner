@@ -4,7 +4,6 @@ from loguru import logger
 from openai import OpenAI
 
 
-
 def generate_messages(instruction_prompt: str, text_to_process: str):
     return [
         {"role": "system", "content": instruction_prompt},
@@ -54,10 +53,8 @@ def process_text_openai_api(
         messages=generate_messages(instruction_prompt, text_to_process),
     )
     logger.debug(response)
-    text_response = " - ".join(
-        [choice["message"]["content"] for choice in response["choices"]]
-    )
-    logger.info(f"Total used tokens: {response['usage']['total_tokens']}")
+    text_response = " - ".join([choice.message.content for choice in response.choices])
+    logger.info(f"Total used tokens: {response.usage.total_tokens}")
 
     return text_response
 

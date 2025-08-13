@@ -24,7 +24,11 @@ CONFIG_OPENAI_API = {
         "google/gemma-3-27b-it-qat-q4_0-gguf": {
             "api_base": "http://127.0.0.1:8090/v1",
             "api_key": os.environ.get("LLAMACPP_API_KEY", "local.llama.key"),
-        }
+        },
+        "google/gemma-3-12b-it-qat-q4_0-gguf": {
+            "api_base": "http://127.0.0.1:8090/v1",
+            "api_key": os.environ.get("LLAMACPP_API_KEY", "local.llama.key"),
+        },
     },
 }
 
