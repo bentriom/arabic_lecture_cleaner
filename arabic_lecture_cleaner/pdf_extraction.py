@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import ollama
 import pdfplumber
 
 
@@ -31,23 +30,3 @@ def extract_text_from_pdf(pdf_path: Path | str):
                 text += page_text + "\n\n"  # Page separator
 
     return text.strip()  # Supprimer les espaces en début/fin
-
-
-def process_text_with_instructions(
-    instruction_prompt: str, text_to_process: str, model: str
-):
-    """
-    Process text using specific instructions via Ollama.
-
-    Args:
-        instruction_prompt: Instructions defining the model's role/behavior
-        text_to_process: The actual text to operate on
-        model: Ollama model name
-    """
-    messages = [
-        {"role": "system", "content": instruction_prompt},
-        {"role": "user", "content": "Traite ce texte: " + text_to_process},
-    ]
-
-    response = ollama.chat(model=model, messages=messages)
-    return response["message"]["content"]

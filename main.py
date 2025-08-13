@@ -1,11 +1,12 @@
 import argparse
 
 from arabic_lecture_cleaner.cleaner import Cleaner
+from arabic_lecture_cleaner.constants import LLM_APIS
 
 
-def main(data_dir: str, mode: str, model: str):
+def main(data_dir: str, api: str, model: str):
     cleaner = Cleaner(data_dir=data_dir)
-    cleaner.run(mode=mode, model=model)
+    cleaner.run(api=api, model=model)
 
 
 if __name__ == "__main__":
@@ -14,19 +15,19 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "--mode",
+        "--api",
         required=False,
-        default="local",
+        default="ollama",
         type=str,
-        help="Operating mode ('api' or 'local').",
-        choices=["api", "local"],
+        help=f"Operating LLM api {LLM_APIS}",
+        choices=LLM_APIS,
     )
     parser.add_argument(
         "--model",
         required=False,
         default="mistral-small3.2:24b",
         type=str,
-        help="Model identifier (depends on local or API call).",
+        help="Model identifier (depends on the LLM API).",
     )
     parser.add_argument(
         "--data_dir",
@@ -37,4 +38,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    main(data_dir=args.data_dir, mode=args.mode, model=args.model)
+    main(data_dir=args.data_dir, api=args.api, model=args.model)

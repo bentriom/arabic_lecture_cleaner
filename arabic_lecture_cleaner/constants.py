@@ -1,5 +1,11 @@
 import os
 
+LLM_APIS = {"ollama", "mammouth"}
+MAP_MODELS_SHORTNAMES = {
+    "ollama": {"mistral-small": "mistral-small3.2:24b"},
+    "mammouth": {},
+}
+
 # Mammouth AI constants
 MAMMOUTH_API_URL = "https://api.mammouth.ai/v1/chat/completions"
 MAMMOUTH_API_KEY = os.environ.get("MAMMOUTH_API_KEY", None)

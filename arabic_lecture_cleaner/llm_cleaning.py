@@ -17,7 +17,7 @@ def generate_messages(instruction_prompt: str, text_to_process: str):
     ]
 
 
-def process_text_local(instruction_prompt: str, text_to_process: str, model: str):
+def process_text_ollama_api(instruction_prompt: str, text_to_process: str, model: str):
     """
     Process text using specific instructions via Ollama.
 
