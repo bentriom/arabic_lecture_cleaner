@@ -1,14 +1,32 @@
 import os
 
-LLM_APIS = {"ollama", "mammouth"}
+LLM_APIS = {"ollama", "mammouth", "llama.cpp"}
 MAP_MODELS_SHORTNAMES = {
     "ollama": {"mistral-small": "mistral-small3.2:24b"},
-    "mammouth": {},
+    "mammouth": {
+        "gemini": "gemini-2.5-flash",
+    },
+    "llama.cpp": {
+        "gemma3:27b": "google/gemma-3-27b-it-qat-q4_0-gguf",
+        "gemma3:12b": "google/gemma-3-12b-it-qat-q4_0-gguf",
+    },
 }
 
-# Mammouth AI constants
-MAMMOUTH_API_URL = "https://api.mammouth.ai/v1/chat/completions"
-MAMMOUTH_API_KEY = os.environ.get("MAMMOUTH_API_KEY", None)
+# OpenAI API config
+CONFIG_OPENAI_API = {
+    "mammouth": {
+        "all": {
+            "api_base": "https://api.mammouth.ai/v1/chat/completions",
+            "api_key": os.environ.get("MAMMOUTH_API_KEY", None),
+        }
+    },
+    "llama.cpp": {
+        "google/gemma-3-27b-it-qat-q4_0-gguf": {
+            "api_base": "http://127.0.0.1:8090/v1",
+            "api_key": os.environ.get("LLAMACPP_API_KEY", "local.llama.key"),
+        }
+    },
+}
 
 # AI instructions prompt (system)
 PREPROMPT_1 = """
@@ -37,6 +55,7 @@ Voici les instructions pour le traitement du texte de cours :
 7. Conserve les tableaux et les listes tels quels, en veillant à ce qu'ils soient correctement formatés.
 8. Ne modifie pas la mise en forme des éléments pédagogiques (par exemple, les dialogues doivent rester sous forme de dialogue).
 
+Optimise ce traitement pour qu'il soit donné à un prompt système de modèle LLM.
 La réponse donnée doit seulement être le texte épuré et balisé selon les instructions définies auparavent, sans rien ajouter ni commenter.
 """
 PREPROMPT_2 = """

@@ -8,12 +8,20 @@ import arabic_lecture_cleaner.constants as const
 from arabic_lecture_cleaner.llm_cleaning import (
     process_text_mammouth_api,
     process_text_ollama_api,
+    process_text_openai_api,
 )
 from arabic_lecture_cleaner.pdf_extraction import extract_text_from_pdf
 
 
 class Cleaner:
     """
+    A class for cleaning Arabic lecture texts extracted from PDF files using LLMs.
+
+    Attributes:
+        data_dir (Path): The directory containing the PDF files.
+        results_dir (Path): The directory to store the extraction and cleaning results.
+        extracted_pdfs (dict): A dictionary to store the extracted text from PDF files.
+        cleaned_extracted_pdfs (dict): A dictionary to store the cleaned text.
     """
 
     def __init__(self, data_dir: str | Path, results_dir: str | Path = "./results"):
@@ -54,7 +62,17 @@ class Cleaner:
                     )
                 cleaned_text = process_text_ollama_api(const.PREPROMPT_1, text, model)
             elif api == "mammouth":
-                cleaned_text = process_text_mammouth_api(const.PREPROMPT_1, text, model)
+                api_base = const.CONFIG_OPENAI_API["mammouth"]["all"]["api_base"]
+                api_key = const.CONFIG_OPENAI_API["mammouth"]["all"]["api_key"]
+                cleaned_text = process_text_mammouth_api(
+                    const.PREPROMPT_1, text, model, api_base, api_key
+                )
+            elif api == "llama.cpp":
+                api_base = const.CONFIG_OPENAI_API["llama.cpp"][model]["api_base"]
+                api_key = const.CONFIG_OPENAI_API["llama.cpp"][model]["api_key"]
+                cleaned_text = process_text_openai_api(
+                    const.PREPROMPT_1, text, model, api_base, api_key
+                )
             save_path = results_cleaning_dir / f"{file}_cleaned.txt"
             logger.info(f"Export results to {save_path}")
             with open(save_path, "w") as f:

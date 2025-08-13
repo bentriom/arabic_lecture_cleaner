@@ -1,8 +1,8 @@
 import ollama
 import requests
 from loguru import logger
+from openai import OpenAI
 
-import arabic_lecture_cleaner.constants as const
 
 
 def generate_messages(instruction_prompt: str, text_to_process: str):
@@ -33,8 +33,12 @@ def process_text_ollama_api(instruction_prompt: str, text_to_process: str, model
     return response["message"]["content"]
 
 
-def process_text_mammouth_api(
-    instruction_prompt: str, text_to_process: str, model: str
+def process_text_openai_api(
+    instruction_prompt: str,
+    text_to_process: str,
+    model: str,
+    api_base: str,
+    api_key: str,
 ):
     """
     Process text using specific instructions via Mammouth AI API.
@@ -44,18 +48,47 @@ def process_text_mammouth_api(
         text_to_process: The actual text to operate on
         model: Model name
     """
-    if const.MAMMOUTH_API_KEY is None:
+    client = OpenAI(base_url=api_base, api_key=api_key)
+    response = client.chat.completions.create(
+        model=model,
+        messages=generate_messages(instruction_prompt, text_to_process),
+    )
+    logger.debug(response)
+    text_response = " - ".join(
+        [choice["message"]["content"] for choice in response["choices"]]
+    )
+    logger.info(f"Total used tokens: {response['usage']['total_tokens']}")
+
+    return text_response
+
+
+def process_text_mammouth_api(
+    instruction_prompt: str,
+    text_to_process: str,
+    model: str,
+    api_base: str,
+    api_key: str,
+):
+    """
+    Process text using specific instructions via Mammouth AI API.
+
+    Args:
+        instruction_prompt: Instructions defining the model's role/behavior
+        text_to_process: The actual text to operate on
+        model: Model name
+    """
+    if api_key is None:
         raise ValueError("Please set a mammouth api key in your environment.")
 
     headers = {
-        "Authorization": f"Bearer {const.MAMMOUTH_API_KEY}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
     }
     data = {
         "model": model,
         "messages": generate_messages(instruction_prompt, text_to_process),
     }
-    response = requests.post(const.MAMMOUTH_API_URL, headers=headers, json=data).json()
+    response = requests.post(api_base, headers=headers, json=data).json()
     logger.debug(response)
     text_response = " - ".join(
         [choice["message"]["content"] for choice in response["choices"]]
